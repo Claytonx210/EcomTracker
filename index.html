@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Analytics Test Store</title>
+
+<!-- Google Analytics GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+
+gtag('js', new Date());
+
+gtag('config', 'G-XXXXXXXXXX', {
+  debug_mode: true
+});
+</script>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+background:#f4f4f4;
+}
+
+h1{
+background:#222;
+color:white;
+padding:15px;
+}
+
+.container{
+display:flex;
+justify-content:center;
+gap:20px;
+margin-top:40px;
+}
+
+.product{
+background:white;
+padding:20px;
+border-radius:10px;
+width:200px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+button{
+padding:10px;
+margin-top:10px;
+border:none;
+background:green;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+.buy{
+background:blue;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Simple E-commerce Store (GA4 Test)</h1>
+
+<div class="container">
+
+<div class="product">
+<h3>T-Shirt</h3>
+<p>$20</p>
+<button onclick="addToCart('TSHIRT','T-Shirt',20)">Add To Cart</button>
+</div>
+
+<div class="product">
+<h3>Shoes</h3>
+<p>$50</p>
+<button onclick="addToCart('SHOES','Running Shoes',50)">Add To Cart</button>
+</div>
+
+<div class="product">
+<h3>Cap</h3>
+<p>$15</p>
+<button onclick="addToCart('CAP','Baseball Cap',15)">Add To Cart</button>
+</div>
+
+</div>
+
+<br><br>
+
+<button class="buy" onclick="buyNow()">Buy Now</button>
+
+<script>
+
+let cart=[];
+
+function addToCart(id,name,price){
+
+cart.push({id,name,price});
+
+gtag('event','add_to_cart',{
+debug_mode:true,
+currency:'INR',
+value:price,
+items:[{
+item_id:id,
+item_name:name,
+price:price,
+quantity:1
+}]
+});
+
+alert(name+" added to cart");
+}
+
+function buyNow(){
+
+let total=0;
+
+cart.forEach(p=>{
+total+=p.price;
+});
+
+gtag('event','purchase',{
+debug_mode:true,
+transaction_id:'T'+Math.floor(Math.random()*100000),
+value:total,
+currency:'INR',
+items:cart.map(p=>({
+item_id:p.id,
+item_name:p.name,
+price:p.price,
+quantity:1
+}))
+});
+
+alert("Purchase complete!");
+
+cart=[];
+
+}
+
+</script>
+
+</body>
+</html>
